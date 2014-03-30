@@ -1,7 +1,7 @@
 {
   "name": "gulp-remember",
   "description": "Adds previously seen files back into the stream.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "http://github.com/ahaurw01/gulp-remember",
   "repository": "git://github.com/ahaurw01/gulp-remember.git",
   "author": "Aaron Haurwitz <aaron.haurwitz@gmail.com> (http://aaron.haurwitz.com/)",
