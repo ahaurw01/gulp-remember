@@ -1,4 +1,4 @@
-# gulp-remember
+# gulp-remember [![NPM version](https://badge.fury.io/js/gulp-remember.png)](http://badge.fury.io/js/gulp-remember) [![Build Status](https://travis-ci.org/ahaurw01/gulp-remember.svg?branch=master)](https://travis-ci.org/ahaurw01/gulp-remember)
 
 gulp-remember is a [gulp](https://github.com/gulpjs/gulp) plugin that remembers files that have passed through it. gulp-remember adds all files back into the stream it has ever seen.
 
