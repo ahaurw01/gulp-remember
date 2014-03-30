@@ -1,0 +1,33 @@
+{
+  "name": "gulp-remember",
+  "description": "Adds previously seen files back into the stream.",
+  "version": "0.0.1",
+  "homepage": "http://github.com/ahaurw01/gulp-remember",
+  "repository": "git://github.com/ahaurw01/gulp-remember.git",
+  "author": "Aaron Haurwitz <aaron.haurwitz@gmail.com> (http://aaron.haurwitz.com/)",
+  "main": "./index.js",
+  "keywords": [
+    "gulpplugin"
+  ],
+  "dependencies": {
+    "through2": "~0.4.1",
+    "gulp-util": "~2.2.14"
+  },
+  "devDependencies": {
+    "mocha": "~1.18.2",
+    "should": "~3.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "engineStrict": true,
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/ahaurw01/gulp-remember/raw/master/LICENSE"
+    }
+  ]
+}
