@@ -1,6 +1,7 @@
 'use strict';
 
 var through = require('through2'),
+    replaceExtension = require('gulp-util').replaceExtension,
     PluginError = require('gulp-util').PluginError,
     pluginName = 'gulp-remember', // name of our plugin for error logging purposes
     caches = {}, // will hold named file caches
@@ -25,9 +26,10 @@ function gulpRemember(cacheName) {
   cache = caches[cacheName];
 
   function transform(file, enc, callback) {
-    cache[file.path] = file; // add file to our cache
+    var path = replaceExtension(file.path, "")
+    cache[path] = file; // add file to our cache
     this.push(file); // add file back into the stream
-    filesSeen.push(file.path); // keep track of having seen this file
+    filesSeen.push(path); // keep track of having seen this file
     callback();
   }
 
@@ -60,6 +62,7 @@ gulpRemember.forget = function (cacheName, path) {
   if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
     throw new PluginError(pluginName, 'Usage: require("gulp-remember").forget(cacheName, path); where cacheName is undefined, number or string and path is a string');
   }
+  path = replaceExtension(path, "")
   delete caches[cacheName][path];
 };
 
