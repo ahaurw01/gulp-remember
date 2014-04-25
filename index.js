@@ -52,8 +52,7 @@ function gulpRemember(cacheName) {
  */
 gulpRemember.forget = function (cacheName, path) {
   if (arguments.length === 1) {
-    path = cacheName;
-    cacheName = defaultName;
+    return delete caches[cacheName];
   }
   if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
     throw new PluginError(pluginName, 'Usage: require("gulp-remember").forget(cacheName, path); where cacheName is undefined, number or string and path is a string');
