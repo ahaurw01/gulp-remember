@@ -1,6 +1,7 @@
 'use strict';
 
 var through = require('through2'),
+    replaceExtension = require('gulp-util').replaceExtension,
     PluginError = require('gulp-util').PluginError,
     pluginName = 'gulp-remember', // name of our plugin for error logging purposes
     caches = {}, // will hold named file caches
@@ -14,8 +15,7 @@ var through = require('through2'),
  *                           Caches with different names can know about different sets of files.
  */
 function gulpRemember(cacheName) {
-  var cache,
-      filesSeen = []; // the files we've put our hands on in the current stream
+  var cache;
 
   if (cacheName !== undefined && typeof cacheName !== 'number' && typeof cacheName !== 'string') {
     throw new PluginError(pluginName, 'Usage: require("gulp-remember")(name); where name is undefined, number or string');
@@ -25,9 +25,8 @@ function gulpRemember(cacheName) {
   cache = caches[cacheName];
 
   function transform(file, enc, callback) {
-    cache[file.path] = file; // add file to our cache
-    this.push(file); // add file back into the stream
-    filesSeen.push(file.path); // keep track of having seen this file
+    var path = replaceExtension(file.path, "")
+    cache[path] = file; // add file to our cache
     callback();
   }
 
@@ -35,8 +34,7 @@ function gulpRemember(cacheName) {
     // add all other files not seen to the stream
     for (var path in cache) {
       if (cache.hasOwnProperty(path)) {
-        // check if this guy was seen yet
-        if (filesSeen.indexOf(path) < 0) {
+        if (cache[path]){
           this.push(cache[path]); // add this file back into the current stream
         }
       }
@@ -54,13 +52,13 @@ function gulpRemember(cacheName) {
  */
 gulpRemember.forget = function (cacheName, path) {
   if (arguments.length === 1) {
-    path = cacheName;
-    cacheName = defaultName;
+    return delete caches[cacheName];
   }
   if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
     throw new PluginError(pluginName, 'Usage: require("gulp-remember").forget(cacheName, path); where cacheName is undefined, number or string and path is a string');
   }
-  delete caches[cacheName][path];
+  path = replaceExtension(path, "")
+  caches[cacheName][path] = null;
 };
 
 module.exports = gulpRemember;
