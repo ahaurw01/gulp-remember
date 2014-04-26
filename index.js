@@ -14,8 +14,7 @@ var through = require('through2'),
  *                           Caches with different names can know about different sets of files.
  */
 function gulpRemember(cacheName) {
-  var cache,
-      filesSeen = []; // the files we've put our hands on in the current stream
+  var cache; // the files we've ever put our hands on in the current stream
 
   if (cacheName !== undefined && typeof cacheName !== 'number' && typeof cacheName !== 'string') {
     throw new PluginError(pluginName, 'Usage: require("gulp-remember")(name); where name is undefined, number or string');
@@ -26,19 +25,15 @@ function gulpRemember(cacheName) {
 
   function transform(file, enc, callback) {
     cache[file.path] = file; // add file to our cache
-    this.push(file); // add file back into the stream
-    filesSeen.push(file.path); // keep track of having seen this file
     callback();
   }
 
   function flush(callback) {
-    // add all other files not seen to the stream
+    // add all files we've ever seen back into the stream
     for (var path in cache) {
       if (cache.hasOwnProperty(path)) {
         // check if this guy was seen yet
-        if (filesSeen.indexOf(path) < 0) {
-          this.push(cache[path]); // add this file back into the current stream
-        }
+        this.push(cache[path]); // add this file back into the current stream
       }
     }
     callback();
