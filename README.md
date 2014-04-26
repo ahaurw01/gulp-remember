@@ -75,6 +75,24 @@ Type: `String`
 
 The path of the file you wish to drop from the remember cache. The path is used under the covers as the unique identifier for the file within one remember cache.
 
+**Important note!** The path you pass to `forget` must be the path of the *processed* file. You may encounter instances where your source file is `some/path/script.coffee` while the processed file is `some/path/script.js`. Because anything could happen before you `remember` a file, it is up to you to know how you need to `forget` it with the correct path.
+
+## Gotchas
+
+### Forgetting files with altered paths
+
+See the API note above for the `path` argument when `forget`ing files. `forget` can only drop files by their *processed* path name, not their *source* path name. In common cases, these two things are equivalent.
+
+Thanks to @brian-mann for bringing this up.
+
+### File ordering
+
+Be aware that this plugin does not make specific attempts to keep your files in any order. For example, if you add a new file governed by a glob you are watching, this file will enter the stream last, even if this file would preceed others alphabetically.
+
+If your build process depends on file ordering, please make use of the [gulp-order](https://www.npmjs.org/package/gulp-order) plugin after `remember`ing files.
+
+Thanks to @brian-mann for bringing this up.
+
 ## License
 
 (MIT License)
