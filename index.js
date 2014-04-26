@@ -32,7 +32,6 @@ function gulpRemember(cacheName) {
     // add all files we've ever seen back into the stream
     for (var path in cache) {
       if (cache.hasOwnProperty(path)) {
-        // check if this guy was seen yet
         this.push(cache[path]); // add this file back into the current stream
       }
     }
