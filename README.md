@@ -1,8 +1,8 @@
 # gulp-remember [![NPM version](https://badge.fury.io/js/gulp-remember.png)](http://badge.fury.io/js/gulp-remember) [![Build Status](https://travis-ci.org/ahaurw01/gulp-remember.svg?branch=master)](https://travis-ci.org/ahaurw01/gulp-remember)
 
-gulp-remember is a [gulp](https://github.com/gulpjs/gulp) plugin that remembers files that have passed through it. gulp-remember adds all files back into the stream it has ever seen.
+`gulp-remember` is a [gulp](https://github.com/gulpjs/gulp) plugin that remembers files that have passed through it. `gulp-remember` adds all the files it has ever seen back into the stream.
 
-gulp-remember pairs nicely with [gulp-cached](https://github.com/wearefractal/gulp-cached) when you want to only rebuild those files that changed, but still need to operate on all files in the set.
+`gulp-remember` pairs nicely with [gulp-cached](https://github.com/wearefractal/gulp-cached) when you want to only rebuild the files that changed, but still need to operate on all files in the set.
 
 ```javascript
 var remember = require('gulp-remember');
@@ -12,7 +12,7 @@ var remember = require('gulp-remember');
 
 This example shows a scenario in which you want to wrap all script files in some type of module system, then concatenate into one `app.js` file for consumption.
 
-As long as your other plugins can keep up, this example showcases the Holy Grail of Build Tools™ - the ability to build once, `git checkout different-branch` (a branch with drastically different files), and the output is exactly what you would expect.
+As long as your other plugins can keep up, this example showcases the Holy Grail of Build Tools™ - the ability to build once, `git checkout different-branch` (a branch with drastically different files), and have the output be exactly what you would expect.
 
 ```javascript
 var gulp = require('gulp'),
