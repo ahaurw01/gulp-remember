@@ -108,7 +108,7 @@ describe('gulp-remember', function () {
       stream.end();
     });
 
-    it('should not pass dulicates through', function (done) {
+    it('should not pass duplicates through', function (done) {
       var stream = remember('noDuplicates'),
           anotherStream,
           filesSeen = 0;
