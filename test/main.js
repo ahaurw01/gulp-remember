@@ -160,5 +160,11 @@ describe('gulp-remember', function () {
       stream.write(makeTestFile('./fixture/one'));
       stream.end();
     });
+
+    it('should not throw when target cache does not exist', function () {
+        (function () {
+            remember.forget('peaceAndLove');
+        }).should.not.throw();
+    });
   });
 });
