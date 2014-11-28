@@ -2,7 +2,9 @@
 
 var remember = require('../'),
     should = require('should'),
-    File = require('gulp-util').File;
+    sinon = require('sinon'),
+    util = require('gulp-util'),
+    File = util.File;
 
 function makeTestFile(path, contents) {
   contents = contents || 'test file';
@@ -162,9 +164,45 @@ describe('gulp-remember', function () {
     });
 
     it('should not throw when target cache does not exist', function () {
-        (function () {
-            remember.forget('peaceAndLove');
-        }).should.not.throw();
+      (function () {
+        remember.forget('peaceAndLove', 'some/file');
+      }).should.not.throw();
+    });
+
+    it('should not throw when target cache exists but file does not', function () {
+      remember('kittens');
+      (function () {
+        remember.forget('kittens', 'Mister_McButtercups');
+      }).should.not.throw();
+    });
+
+    it('should log a warning when target cache does not exist', function () {
+      var logStub = sinon.stub(util, 'log'),
+          logArgs;
+      remember.forget('peaceAndLove', 'some/file');
+      logStub.called.should.be.true;
+      logArgs = logStub.args[0];
+      // Should append the name of the plugin
+      logArgs[0].should.equal('gulp-remember');
+      // Should warn about the specific cache name
+      logArgs[1].should.containEql('peaceAndLove');
+
+      logStub.restore();
+    });
+
+    it('should log a warning when target files does not exist in target cache', function () {
+      var logStub = sinon.stub(util, 'log'),
+          logArgs;
+      remember('cacheThatExists');
+      remember.forget('cacheThatExists', 'file/that/doesnt/exist');
+      logStub.called.should.be.true;
+      logArgs = logStub.args[0];
+      // Should append the name of the plugin
+      logArgs[0].should.equal('gulp-remember');
+      // Should warn about the specific cache name
+      logArgs[1].should.containEql('file/that/doesnt/exist');
+
+      logStub.restore();
     });
   });
 });

@@ -1,8 +1,7 @@
 'use strict';
 
 var through = require('through2'),
-    PluginError = require('gulp-util').PluginError,
-    log = require('gulp-util').log,
+    util = require('gulp-util'),
     pluginName = 'gulp-remember', // name of our plugin for error logging purposes
     caches = {}, // will hold named file caches
     defaultName = '_default'; // name to give a cache if not provided
@@ -18,7 +17,7 @@ function gulpRemember(cacheName) {
   var cache; // the files we've ever put our hands on in the current stream
 
   if (cacheName !== undefined && typeof cacheName !== 'number' && typeof cacheName !== 'string') {
-    throw new PluginError(pluginName, 'Usage: require("gulp-remember")(name); where name is undefined, number or string');
+    throw new util.PluginError(pluginName, 'Usage: require("gulp-remember")(name); where name is undefined, number or string');
   }
   cacheName = cacheName || defaultName; // maybe need to use a default cache
   caches[cacheName] = caches[cacheName] || {}; // maybe initialize the named cache
@@ -44,6 +43,8 @@ function gulpRemember(cacheName) {
 
 /**
  * Forget about a file.
+ * A warning is logged if either the named cache or file do not exist.
+ *
  * @param cacheName {string} name of the cache from which to drop the file
  * @param path {string} path of the file to forget
  */
@@ -53,12 +54,14 @@ gulpRemember.forget = function (cacheName, path) {
     cacheName = defaultName;
   }
   if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
-    throw new PluginError(pluginName, 'Usage: require("gulp-remember").forget(cacheName, path); where cacheName is undefined, number or string and path is a string');
+    throw new util.PluginError(pluginName, 'Usage: require("gulp-remember").forget(cacheName, path); where cacheName is undefined, number or string and path is a string');
   }
   if (caches[cacheName] === undefined) {
-      log(pluginName, 'Warn: cacheName not found');
+    util.log(pluginName, '- .forget() warning: cache ' + cacheName + ' not found');
+  } else if (caches[cacheName][path] === undefined) {
+    util.log(pluginName, '- .forget() warning: file ' + path + ' not found in cache ' + cacheName);
   } else {
-      delete caches[cacheName][path];
+    delete caches[cacheName][path];
   }
 };
 
