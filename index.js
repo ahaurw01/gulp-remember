@@ -2,6 +2,7 @@
 
 var through = require('through2'),
     PluginError = require('gulp-util').PluginError,
+    log = require('gulp-util').log,
     pluginName = 'gulp-remember', // name of our plugin for error logging purposes
     caches = {}, // will hold named file caches
     defaultName = '_default'; // name to give a cache if not provided
@@ -54,7 +55,11 @@ gulpRemember.forget = function (cacheName, path) {
   if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
     throw new PluginError(pluginName, 'Usage: require("gulp-remember").forget(cacheName, path); where cacheName is undefined, number or string and path is a string');
   }
-  delete caches[cacheName][path];
+  if (caches[cacheName] === undefined) {
+      log(pluginName, 'Warn: cacheName not found');
+  } else {
+      delete caches[cacheName][path];
+  }
 };
 
 module.exports = gulpRemember;
