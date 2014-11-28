@@ -69,6 +69,8 @@ Type: `String`
 
 The name of the remember cache on which you want to operate. You do not need to pass this if you want to operate on the default remember cache.
 
+**Note:** If the name does not refer to a cache that exists, a warning is logged. Thanks to @jcppman for this.
+
 #### path (required)
 
 Type: `String`
@@ -76,6 +78,8 @@ Type: `String`
 The path of the file you wish to drop from the remember cache. The path is used under the covers as the unique identifier for the file within one remember cache.
 
 **Important note!** The path you pass to `forget` must be the path of the *processed* file. You may encounter instances where your source file is `some/path/script.coffee` while the processed file is `some/path/script.js`. Because anything could happen before you `remember` a file, it is up to you to know how you need to `forget` it with the correct path.
+
+**Another note:** If the path does not match a file object that exists in the given cache, a warning is logged. Thanks to @jcppman for this.
 
 ## Gotchas
 
