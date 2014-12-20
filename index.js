@@ -65,4 +65,20 @@ gulpRemember.forget = function (cacheName, path) {
   }
 };
 
+/**
+ * Return a raw cache by name.
+ * Useful for checking state. Manually adding or removing files is NOT recommended.
+ *
+ * @param cacheName {string} name of the cache to retrieve
+ */
+gulpRemember.cacheFor = function (cacheName) {
+  if (arguments.length === 0) {
+    cacheName = defaultName;
+  }
+  if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
+    throw new util.PluginError(pluginName, 'Usage: require("gulp-remember").cacheFor(cacheName); where cacheName is undefined, number or string');
+  }
+  return caches[cacheName];
+}
+
 module.exports = gulpRemember;

@@ -81,6 +81,18 @@ The path of the file you wish to drop from the remember cache. The path is used 
 
 **Another note:** If the path does not match a file object that exists in the given cache, a warning is logged. Thanks to @jcppman for this.
 
+### remember.cacheFor(name)
+
+Get a raw remember cache. This can be useful for checking state of the cache, like whether or not a file has been seen before.
+
+**Note:** Remembering or forgetting files by interacting directly with this returned object is not recommended.
+
+#### name (optional)
+
+Type: `String`
+
+The name of the remember cache you want to retrieve. You do not need to pass this if you want to retrieve the default remember cache.
+
 ## Gotchas
 
 ### Forgetting files with altered paths
