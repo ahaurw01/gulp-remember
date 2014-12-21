@@ -205,4 +205,88 @@ describe('gulp-remember', function () {
       logStub.restore();
     });
   });
+
+  describe('forgetAll', function () {
+    it('should forget all files in a populated cache', function (done) {
+      var stream = remember('forgetAll'),
+          anotherStream,
+          filesSeen = 0;
+      stream.resume();
+      stream.once('end', function () {
+        remember.forgetAll('forgetAll');
+        anotherStream = remember('forgetAll');
+        anotherStream.on('data', function (file) {
+          file.path.should.equal('./fixture/three');
+          filesSeen++;
+        });
+        anotherStream.on('end', function () {
+          filesSeen.should.equal(1);
+          done();
+        });
+        anotherStream.write(makeTestFile('./fixture/three'));
+        anotherStream.end();
+      });
+      stream.write(makeTestFile('./fixture/one'));
+      stream.write(makeTestFile('./fixture/two'));
+      stream.end();
+    });
+
+    it('should forget all files in the default cache', function (done) {
+      var stream = remember(),
+          anotherStream,
+          filesSeen = 0;
+      stream.resume();
+      stream.once('end', function () {
+        remember.forgetAll();
+        anotherStream = remember();
+        anotherStream.on('data', function (file) {
+          file.path.should.equal('./fixture/three');
+          filesSeen++;
+        });
+        anotherStream.on('end', function () {
+          filesSeen.should.equal(1);
+          done();
+        });
+        anotherStream.write(makeTestFile('./fixture/three'));
+        anotherStream.end();
+      });
+      stream.write(makeTestFile('./fixture/one'));
+      stream.write(makeTestFile('./fixture/two'));
+      stream.end();
+    });
+
+    it('should not throw when target cache does not exist', function () {
+      (function () {
+        remember.forgetAll('peanutButterJellyTime');
+      }).should.not.throw();
+    });
+
+    it('should log a warning when target cache does not exist', function () {
+      var logStub = sinon.stub(util, 'log'),
+          logArgs;
+      remember.forgetAll('peanutButterJellyTime');
+      logStub.called.should.be.true;
+      logArgs = logStub.args[0];
+      // Should append the name of the plugin
+      logArgs[0].should.equal('gulp-remember');
+      // Should warn about the specific cache name
+      logArgs[1].should.containEql('peanutButterJellyTime');
+
+      logStub.restore();
+    });
+
+    it('should not throw on subsequent forgetAll calls', function (done) {
+      var stream = remember('forgetAllMulti');
+      stream.resume();
+      stream.once('end', function () {
+        remember.forgetAll('forgetAllMulti');
+        (function () {
+          remember.forgetAll('forgetAllMulti');
+        }).should.not.throw();
+        done();
+      });
+      stream.write(makeTestFile('./what/ever'));
+      stream.end();
+    });
+  });
 });
