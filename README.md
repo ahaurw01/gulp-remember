@@ -93,6 +93,18 @@ The name of the remember cache you want to wipe. You do not need to pass this if
 
 **Note:** If the name does not refer to a cache that exists, a warning is logged.
 
+### remember.cacheFor(name)
+
+Get a raw remember cache. This can be useful for checking state of the cache, like whether or not a file has been seen before.
+
+**Note:** Remembering or forgetting files by interacting directly with this returned object is not recommended.
+
+#### name (optional)
+
+Type: `String`
+
+The name of the remember cache you want to retrieve. You do not need to pass this if you want to retrieve the default remember cache.
+
 ## Gotchas
 
 ### Forgetting files with altered paths

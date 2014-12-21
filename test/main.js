@@ -289,4 +289,45 @@ describe('gulp-remember', function () {
       stream.end();
     });
   });
+
+  describe('cacheFor', function () {
+    it('should return the named cache', function (done) {
+      var stream = remember('cacheFor'),
+          cache,
+          file;
+      stream.resume();
+      stream.once('end', function () {
+        cache = remember.cacheFor('cacheFor');
+        cache.should.be.an.instanceOf(Object);
+        file = cache['whitehouse/nuclear-codes.rtf'];
+        file.should.be.an.instanceOf(Object);
+        file.should.have.property('path', 'whitehouse/nuclear-codes.rtf');
+        done();
+      });
+      stream.write(makeTestFile('whitehouse/nuclear-codes.rtf'));
+      stream.end();
+    });
+
+    it('should return the default cache', function (done) {
+      var stream = remember(),
+          cache,
+          file;
+      stream.resume();
+      stream.once('end', function () {
+        cache = remember.cacheFor();
+        cache.should.be.an.instanceOf(Object);
+        file = cache['jennifer-lawrence/fully-clothed.jpg'];
+        file.should.be.an.instanceOf(Object);
+        file.should.have.property('path', 'jennifer-lawrence/fully-clothed.jpg');
+        done();
+      });
+      stream.write(makeTestFile('jennifer-lawrence/fully-clothed.jpg'));
+      stream.end();
+    });
+
+    it('should return nothing if given bogus cache name', function () {
+      var cache = remember.cacheFor('speculation-on-the-guilt-or-innocence-of-adnan-syed');
+      should.not.exist(cache);
+    });
+  });
 });
