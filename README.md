@@ -81,6 +81,18 @@ The path of the file you wish to drop from the remember cache. The path is used 
 
 **Another note:** If the path does not match a file object that exists in the given cache, a warning is logged. Thanks to @jcppman for this.
 
+### remember.forgetAll(name)
+
+Drops all files from a remember cache.
+
+#### name (optional)
+
+Type: `String`
+
+The name of the remember cache you want to wipe. You do not need to pass this if you want to operate on the default remember cache.
+
+**Note:** If the name does not refer to a cache that exists, a warning is logged.
+
 ### remember.cacheFor(name)
 
 Get a raw remember cache. This can be useful for checking state of the cache, like whether or not a file has been seen before.

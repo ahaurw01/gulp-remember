@@ -66,6 +66,26 @@ gulpRemember.forget = function (cacheName, path) {
 };
 
 /**
+ * Forget all files in one cache.
+ * A warning is logged if the cache does not exist.
+ *
+ * @param cacheName {string} name of the cache to wipe
+ */
+gulpRemember.forgetAll = function (cacheName) {
+  if (arguments.length === 0) {
+    cacheName = defaultName;
+  }
+  if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
+    throw new util.PluginError(pluginName, 'Usage: require("gulp-remember").forgetAll(cacheName); where cacheName is undefined, number or string');
+  }
+  if (caches[cacheName] === undefined) {
+    util.log(pluginName, '- .forget() warning: cache ' + cacheName + ' not found');
+  } else {
+    caches[cacheName] = {};
+  }
+}
+
+/**
  * Return a raw cache by name.
  * Useful for checking state. Manually adding or removing files is NOT recommended.
  *
