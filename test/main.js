@@ -6,12 +6,14 @@ var remember = require('../'),
     util = require('gulp-util'),
     File = util.File;
 
-function makeTestFile(path, contents) {
+function makeTestFile(path, contents, history) {
   contents = contents || 'test file';
-  return new File({
+  var file = new File({
     path: path,
     contents: new Buffer(contents)
   });
+  file.history = (history || []).concat(file.history);
+  return file;
 }
 
 require('mocha');
@@ -206,6 +208,54 @@ describe('gulp-remember', function () {
     });
   });
 
+  describe('forgetUsingHistory', function () {
+    it('should forget a file it used to know', function (done) {
+      var stream = remember('forgetUsingHistory'),
+          anotherStream,
+          filesSeen = 0;
+      stream.resume();
+      stream.once('end', function () {
+        remember.forgetUsingHistory('forgetUsingHistory', './fixture/one');
+        anotherStream = remember('forgetUsingHistory');
+        anotherStream.on('data', function (file) {
+          file.path.should.equal('./fixture/two');
+          filesSeen++;
+        });
+        anotherStream.on('end', function () {
+          filesSeen.should.equal(1);
+          done();
+        });
+        anotherStream.write(makeTestFile('./fixture/two', '', ['./fixture/two.old']));
+        anotherStream.end();
+      });
+      stream.write(makeTestFile('./fixture/one', '', ['./fixture/one.old']));
+      stream.end();
+    });
+
+    it('should forget a file it used to know in its history', function (done) {
+      var stream = remember('forgetUsingHistory'),
+          anotherStream,
+          filesSeen = 0;
+      stream.resume();
+      stream.once('end', function () {
+        remember.forgetUsingHistory('forgetUsingHistory', './fixture/one.old');
+        anotherStream = remember('forgetUsingHistory');
+        anotherStream.on('data', function (file) {
+          file.path.should.equal('./fixture/two');
+          filesSeen++;
+        });
+        anotherStream.on('end', function () {
+          filesSeen.should.equal(1);
+          done();
+        });
+        anotherStream.write(makeTestFile('./fixture/two', '', ['./fixture/two.old']));
+        anotherStream.end();
+      });
+      stream.write(makeTestFile('./fixture/one', '', ['./fixture/one.old']));
+      stream.end();
+    });
+  });
+
   describe('forgetAll', function () {
     it('should forget all files in a populated cache', function (done) {
       var stream = remember('forgetAll'),
@@ -328,6 +378,49 @@ describe('gulp-remember', function () {
     it('should return nothing if given bogus cache name', function () {
       var cache = remember.cacheFor('speculation-on-the-guilt-or-innocence-of-adnan-syed');
       should.not.exist(cache);
+    });
+  });
+
+  describe('historyFor', function () {
+    it('should return the named history', function (done) {
+      var stream = remember('historyFor'),
+          history,
+          file;
+      stream.resume();
+      stream.once('end', function () {
+        history = remember.historyFor('historyFor');
+        history.should.be.an.instanceOf(Object);
+        file = history['whitehouse/nuclear-codes.rtf'];
+        file.should.be.equal('whitehouse/nuclear-codes.rtf');
+        file = history['whitehouse/nuclear-codes.old.rtf'];
+        file.should.be.equal('whitehouse/nuclear-codes.rtf');
+        done();
+      });
+      stream.write(makeTestFile('whitehouse/nuclear-codes.rtf', '', ['whitehouse/nuclear-codes.old.rtf']));
+      stream.end();
+    });
+
+    it('should return the default history', function (done) {
+      var stream = remember(),
+          history,
+          file;
+      stream.resume();
+      stream.once('end', function () {
+        history = remember.historyFor();
+        history.should.be.an.instanceOf(Object);
+        file = history['jennifer-lawrence/fully-clothed.jpg'];
+        file.should.be.equal('jennifer-lawrence/fully-clothed.jpg');
+        file = history['jennifer-lawrence/fully-clothed.old.jpg'];
+        file.should.be.equal('jennifer-lawrence/fully-clothed.jpg');
+        done();
+      });
+      stream.write(makeTestFile('jennifer-lawrence/fully-clothed.jpg', '', ['jennifer-lawrence/fully-clothed.old.jpg']));
+      stream.end();
+    });
+
+    it('should return nothing if given bogus history name', function () {
+      var history = remember.historyFor('speculation-on-the-guilt-or-innocence-of-adnan-syed');
+      should.not.exist(history);
     });
   });
 });
