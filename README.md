@@ -79,6 +79,8 @@ The path of the file you wish to drop from the remember cache. The path is used 
 
 **Important note!** The path you pass to `forget` must be the path of the *processed* file. You may encounter instances where your source file is `some/path/script.coffee` while the processed file is `some/path/script.js`. Because anything could happen before you `remember` a file, it is up to you to know how you need to `forget` it with the correct path.
 
+If you want to `forget` files using their name history, you might want to use [gulp-remember-history](https://www.npmjs.com/package/gulp-remember-history).
+
 **Another note:** If the path does not match a file object that exists in the given cache, a warning is logged. Thanks to @jcppman for this.
 
 ### remember.forgetAll(name)
