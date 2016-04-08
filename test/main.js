@@ -83,6 +83,33 @@ describe('gulp-remember', function () {
       stream.end();
     });
 
+    it('should disregard file path case', function (done) {
+      var stream = remember('case-test'),
+          anotherStream,
+          filesSeen = 0,
+          contentsSeen = '',
+          file1 = makeTestFile('./fixture/ONE', 'ONE'),
+          file2 = makeTestFile('./fixture/one', 'one');
+
+      stream.resume(); // don't care about reading the files on this first go-round
+      stream.once('end', function () {
+        anotherStream = remember('case-test');
+        anotherStream.on('data', function (f) {
+          contentsSeen += f.contents.toString();
+          filesSeen++;
+        });
+        anotherStream.once('end', function () {
+          filesSeen.should.equal(1);
+          contentsSeen.should.equal('one');
+          done();
+        });
+        anotherStream.write(file2);
+        anotherStream.end();
+      });
+      stream.write(file1);
+      stream.end();
+    });
+
     it('should use the default cache when no name is passed', function (done) {
       var stream = remember(),
           anotherStream,
