@@ -24,15 +24,16 @@ function gulpRemember(cacheName) {
   cache = caches[cacheName];
 
   function transform(file, enc, callback) {
-    cache[file.path] = file; // add file to our cache
+    var fileKey = file.path.toLowerCase();
+    cache[fileKey] = file; // add file to our cache
     callback();
   }
 
   function flush(callback) {
     // add all files we've ever seen back into the stream
-    for (var path in cache) {
-      if (cache.hasOwnProperty(path)) {
-        this.push(cache[path]); // add this file back into the current stream
+    for (var key in cache) {
+      if (cache.hasOwnProperty(key)) {
+        this.push(cache[key]); // add this file back into the current stream
       }
     }
     callback();
@@ -53,6 +54,7 @@ gulpRemember.forget = function (cacheName, path) {
     path = cacheName;
     cacheName = defaultName;
   }
+  path = path.toLowerCase();
   if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
     throw new util.PluginError(pluginName, 'Usage: require("gulp-remember").forget(cacheName, path); where cacheName is undefined, number or string and path is a string');
   }
