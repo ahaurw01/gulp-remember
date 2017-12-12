@@ -166,7 +166,7 @@ describe('gulp-remember', function () {
     });
 
 	it('should keep immutable file in cache', function (done) {
-		var stream = remember('noMutation'),
+        var stream = remember('noMutation'),
             file = makeTestFile('fixture/file.js', 'just a file');
 
         stream.on('data', function (file) {
