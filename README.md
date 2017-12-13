@@ -123,6 +123,12 @@ If your build process depends on file ordering, please make use of the [gulp-ord
 
 Thanks to @brian-mann for bringing this up.
 
+### Files do not change in the cache
+
+Files are `.clone()`'d when placed into the cache and when taken out of the cache. This ensures that no other aspects of the build will alter the cache.
+
+Thanks to @mjancarik for this addition.
+
 ## License
 
 (MIT License)
