@@ -164,6 +164,22 @@ describe('gulp-remember', function () {
       stream.write(makeTestFile('./fixture/four'));
       stream.end();
     });
+
+	it('should keep immutable file in cache', function (done) {
+        var stream = remember('noMutation'),
+            file = makeTestFile('fixture/file.js', 'just a file');
+
+        stream.on('data', function (file) {
+          file.contents = new Buffer('Different file');
+        });
+        stream.once('end', function () {
+          file.contents.toString().should.equal('just a file');
+          done();
+        });
+
+        stream.write(file);
+        stream.end();
+    });
   });
 
   describe('forget', function () {

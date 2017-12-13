@@ -25,7 +25,7 @@ function gulpRemember(cacheName) {
 
   function transform(file, enc, callback) {
     var fileKey = file.path.toLowerCase();
-    cache[fileKey] = file; // add file to our cache
+    cache[fileKey] = file.clone(); // add file to our cache
     callback();
   }
 
@@ -33,7 +33,7 @@ function gulpRemember(cacheName) {
     // add all files we've ever seen back into the stream
     for (var key in cache) {
       if (cache.hasOwnProperty(key)) {
-        this.push(cache[key]); // add this file back into the current stream
+        this.push(cache[key].clone()); // add this file back into the current stream
       }
     }
     callback();
