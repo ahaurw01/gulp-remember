@@ -1,6 +1,7 @@
 'use strict';
 
 var through = require('through2'),
+    PluginError = require('plugin-error'),
     util = require('gulp-util'),
     pluginName = 'gulp-remember', // name of our plugin for error logging purposes
     caches = {}, // will hold named file caches
@@ -17,7 +18,7 @@ function gulpRemember(cacheName) {
   var cache; // the files we've ever put our hands on in the current stream
 
   if (cacheName !== undefined && typeof cacheName !== 'number' && typeof cacheName !== 'string') {
-    throw new util.PluginError(pluginName, 'Usage: require("gulp-remember")(name); where name is undefined, number or string');
+    throw new PluginError(pluginName, 'Usage: require("gulp-remember")(name); where name is undefined, number or string');
   }
   cacheName = cacheName || defaultName; // maybe need to use a default cache
   caches[cacheName] = caches[cacheName] || {}; // maybe initialize the named cache
@@ -56,7 +57,7 @@ gulpRemember.forget = function (cacheName, path) {
   }
   path = path.toLowerCase();
   if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
-    throw new util.PluginError(pluginName, 'Usage: require("gulp-remember").forget(cacheName, path); where cacheName is undefined, number or string and path is a string');
+    throw new PluginError(pluginName, 'Usage: require("gulp-remember").forget(cacheName, path); where cacheName is undefined, number or string and path is a string');
   }
   if (caches[cacheName] === undefined) {
     util.log(pluginName, '- .forget() warning: cache ' + cacheName + ' not found');
@@ -78,7 +79,7 @@ gulpRemember.forgetAll = function (cacheName) {
     cacheName = defaultName;
   }
   if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
-    throw new util.PluginError(pluginName, 'Usage: require("gulp-remember").forgetAll(cacheName); where cacheName is undefined, number or string');
+    throw new PluginError(pluginName, 'Usage: require("gulp-remember").forgetAll(cacheName); where cacheName is undefined, number or string');
   }
   if (caches[cacheName] === undefined) {
     util.log(pluginName, '- .forget() warning: cache ' + cacheName + ' not found');
@@ -98,7 +99,7 @@ gulpRemember.cacheFor = function (cacheName) {
     cacheName = defaultName;
   }
   if (typeof cacheName !== 'number' && typeof cacheName !== 'string') {
-    throw new util.PluginError(pluginName, 'Usage: require("gulp-remember").cacheFor(cacheName); where cacheName is undefined, number or string');
+    throw new PluginError(pluginName, 'Usage: require("gulp-remember").cacheFor(cacheName); where cacheName is undefined, number or string');
   }
   return caches[cacheName];
 }
