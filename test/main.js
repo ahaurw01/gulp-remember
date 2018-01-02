@@ -19,10 +19,10 @@ describe('gulp-remember', function () {
   describe('remember', function () {
     it('should pass one file through a previously empty cache', function (done) {
       var stream = remember('passOneThrough'),
-          file = makeTestFile('./fixture/file.js', 'just a file'),
+          file = makeTestFile('/fixture/file.js', 'just a file'),
           filesSeen = 0;
       stream.on('data', function (file) {
-        file.path.should.equal('./fixture/file.js');
+        file.path.should.equal('/fixture/file.js');
         file.contents.toString().should.equal('just a file');
         filesSeen++;
       });
@@ -40,7 +40,7 @@ describe('gulp-remember', function () {
           filesSeen = 0;
 
       stream.on('data', function (file) {
-        file.path.should.startWith('./fixture/');
+        file.path.should.startWith('/fixture/');
         file.path.should.endWith('.js');
         file.contents.toString().should.startWith('file');
         filesSeen++;
@@ -50,7 +50,7 @@ describe('gulp-remember', function () {
         done();
       });
       for (i = 0; i < 100; i++) {
-        stream.write(makeTestFile('./fixture/' + i + '.js', 'file ' + i));
+        stream.write(makeTestFile('/fixture/' + i + '.js', 'file ' + i));
       }
       stream.end();
     });
@@ -59,8 +59,8 @@ describe('gulp-remember', function () {
       var stream = remember('remember'),
           anotherStream,
           filesSeen = 0,
-          startingFiles = [makeTestFile('./fixture/one'), makeTestFile('./fixture/two')],
-          oneMoreFile = makeTestFile('./fixture/three');
+          startingFiles = [makeTestFile('/fixture/one'), makeTestFile('/fixture/two')],
+          oneMoreFile = makeTestFile('/fixture/three');
 
       stream.resume(); // don't care about reading the files on this first go-round
       stream.once('end', function () {
@@ -87,8 +87,8 @@ describe('gulp-remember', function () {
           anotherStream,
           filesSeen = 0,
           contentsSeen = '',
-          file1 = makeTestFile('./fixture/ONE', 'ONE'),
-          file2 = makeTestFile('./fixture/one', 'one');
+          file1 = makeTestFile('/fixture/ONE', 'ONE'),
+          file2 = makeTestFile('/fixture/one', 'one');
 
       stream.resume(); // don't care about reading the files on this first go-round
       stream.once('end', function () {
@@ -126,12 +126,12 @@ describe('gulp-remember', function () {
           done();
         });
         for (i = 1000; i < 2000; i++) {
-          anotherStream.write(makeTestFile('./fixture/' + i + '.js'));
+          anotherStream.write(makeTestFile('/fixture/' + i + '.js'));
         }
         anotherStream.end();
       });
       for (i = 0; i < 1000; i++) {
-        stream.write(makeTestFile('./fixture/' + i + '.js'));
+        stream.write(makeTestFile('/fixture/' + i + '.js'));
       }
       stream.end();
     });
@@ -151,33 +151,33 @@ describe('gulp-remember', function () {
           filesSeen.should.equal(6);
           done();
         });
-        anotherStream.write(makeTestFile('./fixture/three'));
-        anotherStream.write(makeTestFile('./fixture/four'));
-        anotherStream.write(makeTestFile('./fixture/five'));
-        anotherStream.write(makeTestFile('./fixture/six'));
+        anotherStream.write(makeTestFile('/fixture/three'));
+        anotherStream.write(makeTestFile('/fixture/four'));
+        anotherStream.write(makeTestFile('/fixture/five'));
+        anotherStream.write(makeTestFile('/fixture/six'));
         anotherStream.end();
       });
-      stream.write(makeTestFile('./fixture/one'));
-      stream.write(makeTestFile('./fixture/two'));
-      stream.write(makeTestFile('./fixture/three'));
-      stream.write(makeTestFile('./fixture/four'));
+      stream.write(makeTestFile('/fixture/one'));
+      stream.write(makeTestFile('/fixture/two'));
+      stream.write(makeTestFile('/fixture/three'));
+      stream.write(makeTestFile('/fixture/four'));
       stream.end();
     });
 
-	it('should keep immutable file in cache', function (done) {
-        var stream = remember('noMutation'),
-            file = makeTestFile('fixture/file.js', 'just a file');
+    it('should keep immutable file in cache', function (done) {
+      var stream = remember('noMutation'),
+          file = makeTestFile('fixture/file.js', 'just a file');
 
-        stream.on('data', function (file) {
-          file.contents = new Buffer('Different file');
-        });
-        stream.once('end', function () {
-          file.contents.toString().should.equal('just a file');
-          done();
-        });
+      stream.on('data', function (file) {
+        file.contents = new Buffer('Different file');
+      });
+      stream.once('end', function () {
+        file.contents.toString().should.equal('just a file');
+        done();
+      });
 
-        stream.write(file);
-        stream.end();
+      stream.write(file);
+      stream.end();
     });
   });
 
@@ -188,20 +188,20 @@ describe('gulp-remember', function () {
           filesSeen = 0;
       stream.resume();
       stream.once('end', function () {
-        remember.forget('forget', './fixture/one');
+        remember.forget('forget', '/fixture/one');
         anotherStream = remember('forget');
         anotherStream.on('data', function (file) {
-          file.path.should.equal('./fixture/two');
+          file.path.should.equal('/fixture/two');
           filesSeen++;
         });
         anotherStream.on('end', function () {
           filesSeen.should.equal(1);
           done();
         });
-        anotherStream.write(makeTestFile('./fixture/two'));
+        anotherStream.write(makeTestFile('/fixture/two'));
         anotherStream.end();
       });
-      stream.write(makeTestFile('./fixture/one'));
+      stream.write(makeTestFile('/fixture/one'));
       stream.end();
     });
 
@@ -258,18 +258,18 @@ describe('gulp-remember', function () {
         remember.forgetAll('forgetAll');
         anotherStream = remember('forgetAll');
         anotherStream.on('data', function (file) {
-          file.path.should.equal('./fixture/three');
+          file.path.should.equal('/fixture/three');
           filesSeen++;
         });
         anotherStream.on('end', function () {
           filesSeen.should.equal(1);
           done();
         });
-        anotherStream.write(makeTestFile('./fixture/three'));
+        anotherStream.write(makeTestFile('/fixture/three'));
         anotherStream.end();
       });
-      stream.write(makeTestFile('./fixture/one'));
-      stream.write(makeTestFile('./fixture/two'));
+      stream.write(makeTestFile('/fixture/one'));
+      stream.write(makeTestFile('/fixture/two'));
       stream.end();
     });
 
@@ -282,18 +282,18 @@ describe('gulp-remember', function () {
         remember.forgetAll();
         anotherStream = remember();
         anotherStream.on('data', function (file) {
-          file.path.should.equal('./fixture/three');
+          file.path.should.equal('/fixture/three');
           filesSeen++;
         });
         anotherStream.on('end', function () {
           filesSeen.should.equal(1);
           done();
         });
-        anotherStream.write(makeTestFile('./fixture/three'));
+        anotherStream.write(makeTestFile('/fixture/three'));
         anotherStream.end();
       });
-      stream.write(makeTestFile('./fixture/one'));
-      stream.write(makeTestFile('./fixture/two'));
+      stream.write(makeTestFile('/fixture/one'));
+      stream.write(makeTestFile('/fixture/two'));
       stream.end();
     });
 
@@ -327,7 +327,7 @@ describe('gulp-remember', function () {
         }).should.not.throw();
         done();
       });
-      stream.write(makeTestFile('./what/ever'));
+      stream.write(makeTestFile('what/ever'));
       stream.end();
     });
   });
