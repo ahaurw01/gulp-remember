@@ -3,8 +3,7 @@
 var remember = require('../'),
     should = require('should'),
     sinon = require('sinon'),
-    util = require('gulp-util'),
-    File = util.File;
+    File = require('vinyl');
 
 function makeTestFile(path, contents) {
   contents = contents || 'test file';
