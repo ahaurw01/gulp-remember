@@ -10,13 +10,15 @@
     "gulpplugin"
   ],
   "dependencies": {
-    "gulp-util": "^3.0.1",
+    "fancy-log": "^1.3.2",
+    "plugin-error": "^0.1.2",
     "through2": "^0.5.0"
   },
   "devDependencies": {
     "mocha": "~1.18.2",
     "should": "~3.2.0",
-    "sinon": "^1.12.1"
+    "sinon": "^1.12.1",
+    "vinyl": "^2.1.0"
   },
   "scripts": {
     "test": "mocha --reporter spec"
