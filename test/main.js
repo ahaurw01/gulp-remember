@@ -219,7 +219,7 @@ describe('gulp-remember', function () {
     });
 
     it('should log a warning when target cache does not exist', function () {
-      var logStub = sinon.stub(util, 'log'),
+      var logStub = sinon.stub(console, 'log'),
           logArgs;
       remember.forget('peaceAndLove', 'some/file');
       logStub.called.should.be.true;
@@ -233,7 +233,7 @@ describe('gulp-remember', function () {
     });
 
     it('should log a warning when target files does not exist in target cache', function () {
-      var logStub = sinon.stub(util, 'log'),
+      var logStub = sinon.stub(console, 'log'),
           logArgs;
       remember('cacheThatExists');
       remember.forget('cacheThatExists', 'file/that/doesnt/exist');
@@ -304,7 +304,7 @@ describe('gulp-remember', function () {
     });
 
     it('should log a warning when target cache does not exist', function () {
-      var logStub = sinon.stub(util, 'log'),
+      var logStub = sinon.stub(console, 'log'),
           logArgs;
       remember.forgetAll('peanutButterJellyTime');
       logStub.called.should.be.true;
